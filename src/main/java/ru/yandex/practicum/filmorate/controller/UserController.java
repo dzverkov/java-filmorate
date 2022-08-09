@@ -40,14 +40,12 @@ public class UserController {
 
         log.debug("Получен запрос на обновление пользователя. Параметры: {}.", user);
 
-        try {
-            if (!users.containsKey(user.getId())) {
-                throw new ValidationException("Пользователь с id: " + user.getId() + " не найден.");
-            }
-        } catch (ValidationException ex) {
-            log.error(ex.getMessage());
-            throw new ValidationException();
+        if (!users.containsKey(user.getId())) {
+            String errorMessage = "Пользователь с id: " + user.getId() + " не найден.";
+            log.error(errorMessage);
+            throw new ValidationException(errorMessage);
         }
+
         User userValidated = validateName(user);
 
         users.put(userValidated.getId(), userValidated);

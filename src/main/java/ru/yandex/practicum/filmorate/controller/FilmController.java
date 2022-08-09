@@ -27,12 +27,7 @@ public class FilmController {
 
         log.debug("Получен запрос на добавление нового фильма. Параметры: {}.", film);
 
-        try {
-            validateReleaseDate(film);
-        } catch (ValidationException ex) {
-            log.error(ex.getMessage());
-            throw new ValidationException();
-        }
+        validateReleaseDate(film);
 
         film.setId(films.size() + 1);
         films.put(film.getId(), film);
@@ -44,17 +39,13 @@ public class FilmController {
     public Film updateFilm(@Valid @RequestBody Film film) {
         log.debug("Получен запрос на обновление фильма. Параметры: {}.", film);
 
-        try {
-            if (!films.containsKey(film.getId())) {
-                throw new ValidationException("Фильм с id: " + film.getId() + " не найден.");
-            }
-
-            validateReleaseDate(film);
-
-        } catch (ValidationException ex) {
-            log.error(ex.getMessage());
-            throw new ValidationException();
+        if (!films.containsKey(film.getId())) {
+            String errorMessage = "Фильм с id: " + film.getId() + " не найден.";
+            log.error(errorMessage);
+            throw new ValidationException(errorMessage);
         }
+
+        validateReleaseDate(film);
 
         films.put(film.getId(), film);
         log.debug("Обновлён фильм: {}", film);
@@ -64,9 +55,13 @@ public class FilmController {
     static void validateReleaseDate(Film film) {
         final LocalDate MIN_RELEASED_DATE = LocalDate.of(1895, 12, 28);
 
+        // дата релиза должна быть заполнена
+        if (film.getReleaseDate() == null) {
+            throw new ValidationException("Дата релиза должна быть заполнена");
+        }
         // дата релиза — не раньше 28 декабря 1895 года
         if (film.getReleaseDate().isBefore(MIN_RELEASED_DATE)) {
-            throw new ValidationException("Дата созданияне должна быть больше " + MIN_RELEASED_DATE);
+            throw new ValidationException("Дата релиза должна быть больше " + MIN_RELEASED_DATE);
         }
     }
 
