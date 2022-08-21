@@ -1,13 +1,14 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.service.user;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserControllerTest {
+class UserServiceTest {
 
     @Test
     void validateName() {
@@ -16,7 +17,7 @@ class UserControllerTest {
         user.setLogin("dolore");
         user.setBirthday(LocalDate.of(2000, 03, 15));
 
-        user = UserController.validateName(user);
+        user = UserService.validateName(user);
         assertEquals(user.getLogin(), user.getName());
     }
 }

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.service.film;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -6,9 +6,10 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class FilmControllerTest {
+class FilmServiceTest {
 
     @Test
     void validateReleaseDate() {
@@ -19,12 +20,12 @@ class FilmControllerTest {
         film.setDuration(120);
 
         assertThrows(ValidationException.class,
-                ()-> FilmController.validateReleaseDate(film));
+                () -> FilmService.validateReleaseDate(film));
 
         film.setReleaseDate(LocalDate.of(1895, 12, 28));
-        assertDoesNotThrow(()-> FilmController.validateReleaseDate(film));
+        assertDoesNotThrow(() -> FilmService.validateReleaseDate(film));
 
         film.setReleaseDate(LocalDate.of(2020, 12, 28));
-        assertDoesNotThrow(()-> FilmController.validateReleaseDate(film));
+        assertDoesNotThrow(() -> FilmService.validateReleaseDate(film));
     }
 }
