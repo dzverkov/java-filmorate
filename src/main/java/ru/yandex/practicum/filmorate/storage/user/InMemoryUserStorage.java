@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Component
 public class InMemoryUserStorage implements UserStorage {
     private final HashMap<Integer, User> users = new HashMap<>();
@@ -24,7 +23,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User createUser(User user) {
-        user.setId(users.size() + 1);
         users.put(user.getId(), user);
         return user;
     }
@@ -56,7 +54,7 @@ public class InMemoryUserStorage implements UserStorage {
     public List<User> findUserFriends(int userId) {
         User user = users.get(userId);
         return user.getFriends().stream()
-                .map(id -> users.get(id))
+                .map(users::get)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -68,9 +66,14 @@ public class InMemoryUserStorage implements UserStorage {
         userFriendsCommon.retainAll(otherUserFriends);
 
         return userFriendsCommon.stream()
-                .map(id -> users.get(id))
+                .map(users::get)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public int getNextId() {
+        return users.size() + 1;
     }
 
 

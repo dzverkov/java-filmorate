@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
 
@@ -27,7 +26,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film createFilm(Film film) {
-        film.setId(films.size() + 1);
         films.put(film.getId(), film);
         return film;
     }
@@ -59,6 +57,11 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .sorted(this::topPopularFilmsCompare)
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public int getNextId() {
+        return films.size() + 1;
     }
 
     private int topPopularFilmsCompare(Film f0, Film f1) {

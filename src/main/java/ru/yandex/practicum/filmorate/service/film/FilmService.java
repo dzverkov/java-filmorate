@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service.film;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,16 +15,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class FilmService {
-    FilmStorage filmStorage;
-    UserService userService;
-
-    @Autowired
-    public FilmService(FilmStorage filmStorage, UserService userService) {
-        this.filmStorage = filmStorage;
-        this.userService = userService;
-    }
+    private final FilmStorage filmStorage;
+    private final UserService userService;
 
     public List<Film> findAllFilms() {
         return filmStorage.findAllFilms();
@@ -38,16 +34,16 @@ public class FilmService {
     }
 
     public Film createFilm(Film film) {
-        log.debug("Получен запрос на добавление нового фильма. Параметры: {}.", film);
         validateReleaseDate(film);
+
+        int id = filmStorage.getNextId();
+        film.setId(id);
         filmStorage.createFilm(film);
         log.debug("Добавлен фильм: {}", film);
         return film;
     }
 
     public Film updateFilm(Film film) {
-        log.debug("Получен запрос на обновление фильма. Параметры: {}.", film);
-
         validateFileAvailability(film);
         validateReleaseDate(film);
 
@@ -57,7 +53,6 @@ public class FilmService {
     }
 
     public void addLike(int filmId, int userId) {
-        log.debug("Получен запрос на добавление лайка фильму с id = {} от пользователя с id = {}.", filmId, userId);
         validateFileAvailability(filmId);
         userService.validateUserAvailability(userId);
 
@@ -66,7 +61,6 @@ public class FilmService {
     }
 
     public void deleteLike(int filmId, int userId) {
-        log.debug("Получен запрос на удаление лайка фильму с id = {} от пользователя с id = {}.", filmId, userId);
         validateFileAvailability(filmId);
         userService.validateUserAvailability(userId);
 
@@ -97,7 +91,7 @@ public class FilmService {
         }
     }
 
-    static void validateReleaseDate(Film film) {
+    public static void validateReleaseDate(Film film) {
         final LocalDate MIN_RELEASED_DATE = LocalDate.of(1895, 12, 28);
 
         // дата релиза должна быть заполнена

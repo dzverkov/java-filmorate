@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service.user;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,9 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    UserStorage userStorage;
-
-    @Autowired
-    public UserService(UserStorage userStorage) {
-        this.userStorage = userStorage;
-    }
+    private final UserStorage userStorage;
 
     public List<User> findAllUsers() {
         return userStorage.findAllUsers();
@@ -34,17 +31,16 @@ public class UserService {
 
     public User createUser(User user) {
         User userValidated;
-        log.debug("Получен запрос на добавление нового пользователя. Параметры: {}.", user);
         userValidated = validateName(user);
+
+        int id = userStorage.getNextId();
+        userValidated.setId(id);
         userStorage.createUser(userValidated);
         log.debug("Добавлен пользователь: {}", user);
         return user;
     }
 
     public User updateUser(User user) {
-
-        log.debug("Получен запрос на обновление пользователя. Параметры: {}.", user);
-
         validateUserAvailability(user);
         User userValidated = validateName(user);
 
@@ -54,8 +50,6 @@ public class UserService {
     }
 
     public void createFriend(int userId, int friendId) {
-        log.debug("Получен запрос на добавление к пользователю с id = {} друга с id = {}.", userId, friendId);
-
         validateUserAvailability(userId);
         validateUserAvailability(friendId);
 
@@ -64,8 +58,6 @@ public class UserService {
     }
 
     public void deleteFriend(int userId, int friendId) {
-        log.debug("Получен запрос на удаление у пользователя с id = {} друга с id = {}.", userId, friendId);
-
         validateUserAvailability(userId);
         validateUserAvailability(friendId);
 

@@ -21,4 +21,6 @@ public interface FilmStorage {
     boolean deleteLike(int filmId, int userId);
 
     List<Film> findTopPopularFilms(int count);
+
+    int getNextId();
 }

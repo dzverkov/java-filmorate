@@ -22,4 +22,6 @@ public interface UserStorage {
     List<User> findUserFriends(int userId);
 
     List<User> findUsersFriendsCommon(int userId, int otherId);
+
+    int getNextId();
 }
