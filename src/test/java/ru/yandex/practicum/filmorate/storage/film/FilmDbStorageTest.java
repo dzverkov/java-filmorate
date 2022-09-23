@@ -14,9 +14,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,7 +41,7 @@ class FilmDbStorageTest {
                 120,
                 4,
                 new Mpa(1, "G"),
-                Set.of()
+                List.of()
         );
 
         film2 = new Film(2,
@@ -52,7 +51,7 @@ class FilmDbStorageTest {
                 180,
                 4,
                 new Mpa(1, "G"),
-                Set.of()
+                List.of()
         );
     }
 
@@ -101,7 +100,7 @@ class FilmDbStorageTest {
         film1.setDescription("Film 11 Description");
         film1.setReleaseDate(LocalDate.of(2020, 3, 25));
         film1.setDuration(120);
-        Set<Genre> genres = new HashSet<>();
+        List<Genre> genres = new ArrayList<>();
         genres.add(new Genre(1, "Комедия"));
         genres.add(new Genre(2, "Драма"));
         genres.add(new Genre(3, "Мультфильм"));
