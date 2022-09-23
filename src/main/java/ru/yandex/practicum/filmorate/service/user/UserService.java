@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FriendNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -33,15 +32,12 @@ public class UserService {
         User userValidated;
         userValidated = validateName(user);
 
-        int id = userStorage.getNextId();
-        userValidated.setId(id);
         userStorage.createUser(userValidated);
         log.debug("Добавлен пользователь: {}", user);
         return user;
     }
 
     public User updateUser(User user) {
-        validateUserAvailability(user);
         User userValidated = validateName(user);
 
         user = userStorage.updateUser(userValidated);
@@ -50,17 +46,11 @@ public class UserService {
     }
 
     public void createFriend(int userId, int friendId) {
-        validateUserAvailability(userId);
-        validateUserAvailability(friendId);
-
         userStorage.createFriend(userId, friendId);
         log.debug("Добавлен к пользователю с id = {} друг с id = {}.", userId, friendId);
     }
 
     public void deleteFriend(int userId, int friendId) {
-        validateUserAvailability(userId);
-        validateUserAvailability(friendId);
-
         boolean isDeleted = userStorage.deleteFriend(userId, friendId);
 
         if (!isDeleted) {
@@ -71,28 +61,11 @@ public class UserService {
     }
 
     public List<User> findUserFriends(int userId) {
-        validateUserAvailability(userId);
-
         return userStorage.findUserFriends(userId);
     }
 
     public List<User> findUsersFriendsCommon(int userId, int otherId) {
-        validateUserAvailability(userId);
-        validateUserAvailability(otherId);
-
         return userStorage.findUsersFriendsCommon(userId, otherId);
-    }
-
-    private void validateUserAvailability(User user) {
-        validateUserAvailability(user.getId());
-    }
-
-    public void validateUserAvailability(int userId) {
-        if (!userStorage.contains(userId)) {
-            String errorMessage = "Пользователь с id: " + userId + " не найден.";
-            log.error(errorMessage);
-            throw new UserNotFoundException(errorMessage);
-        }
     }
 
     static User validateName(User user) {

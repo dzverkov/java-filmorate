@@ -2,13 +2,11 @@ package ru.yandex.practicum.filmorate.service.film;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.LikeNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.time.LocalDate;
@@ -18,8 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class FilmService {
+
     private final FilmStorage filmStorage;
-    private final UserService userService;
 
     public List<Film> findAllFilms() {
         return filmStorage.findAllFilms();
@@ -36,34 +34,25 @@ public class FilmService {
     public Film createFilm(Film film) {
         validateReleaseDate(film);
 
-        int id = filmStorage.getNextId();
-        film.setId(id);
-        filmStorage.createFilm(film);
+        film = filmStorage.createFilm(film);
         log.debug("Добавлен фильм: {}", film);
         return film;
     }
 
     public Film updateFilm(Film film) {
-        validateFileAvailability(film);
         validateReleaseDate(film);
 
-        filmStorage.updateFilm(film);
+        film = filmStorage.updateFilm(film);
         log.debug("Обновлён фильм: {}", film);
         return film;
     }
 
     public void addLike(int filmId, int userId) {
-        validateFileAvailability(filmId);
-        userService.validateUserAvailability(userId);
-
         filmStorage.addLike(filmId, userId);
         log.debug("Добавлен лайк фильму с id = {} от пользователя с id = {}.", filmId, userId);
     }
 
     public void deleteLike(int filmId, int userId) {
-        validateFileAvailability(filmId);
-        userService.validateUserAvailability(userId);
-
         boolean isDeleted = filmStorage.deleteLike(filmId, userId);
 
         if (!isDeleted) {
@@ -75,20 +64,7 @@ public class FilmService {
 
     public List<Film> findTopPopularFilms(int count) {
 
-
         return filmStorage.findTopPopularFilms(count);
-    }
-
-    private void validateFileAvailability(Film film) {
-        validateFileAvailability(film.getId());
-    }
-
-    private void validateFileAvailability(int filmId) {
-        if (!filmStorage.contains(filmId)) {
-            String errorMessage = "Фильм с id: " + filmId + " не найден.";
-            log.error(errorMessage);
-            throw new FilmNotFoundException(errorMessage);
-        }
     }
 
     public static void validateReleaseDate(Film film) {

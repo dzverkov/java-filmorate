@@ -22,5 +22,4 @@ public interface FilmStorage {
 
     List<Film> findTopPopularFilms(int count);
 
-    int getNextId();
 }
