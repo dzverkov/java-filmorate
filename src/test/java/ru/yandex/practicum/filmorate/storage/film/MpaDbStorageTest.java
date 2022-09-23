@@ -12,7 +12,7 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @AutoConfigureTestDatabase

@@ -129,15 +129,15 @@ class UserDbStorageTest {
 
 
         for (int i = 2; i < users.size(); i++) {
-            if(i % 2 != 0){
+            if (i % 2 != 0) {
                 userStorage.createFriend(users.get(0).getId(), users.get(i).getId());
             }
-            if(i % 2 == 0 || i % 3 == 0){
+            if (i % 2 == 0 || i % 3 == 0) {
                 userStorage.createFriend(users.get(1).getId(), users.get(i).getId());
             }
         }
 
         List<User> friends = userStorage.findUsersFriendsCommon(users.get(0).getId(), users.get(1).getId());
-       assertEquals(2, friends.size());
+        assertEquals(2, friends.size());
     }
 }

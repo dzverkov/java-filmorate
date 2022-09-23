@@ -5,7 +5,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.GenreNotFoundException;
-import ru.yandex.practicum.filmorate.exception.MpaNotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.sql.ResultSet;
@@ -24,7 +23,7 @@ public class GenreDbStorage implements GenreStorage {
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeGenre(rs), id);
         } catch (EmptyResultDataAccessException ex) {
-            throw  new GenreNotFoundException("Жанр с id = " + id + " не найден.");
+            throw new GenreNotFoundException("Жанр с id = " + id + " не найден.");
         }
     }
 

@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.LikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -17,7 +16,10 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -241,7 +243,7 @@ public class FilmDbStorage implements FilmStorage {
             paramList.addAll(film.getGenres().stream().map(Genre::getId).collect(Collectors.toList()));
             String inSql = String.join(",", Collections.nCopies(film.getGenres().size(), "?"));
             jdbcTemplate.update(String.format(insertFilmGenresSql, inSql), paramList.toArray());
-       }
+        }
     }
 
 }

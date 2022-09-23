@@ -29,7 +29,7 @@ public class MpaDbStorage implements MpaStorage {
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeMpa(rs), id);
         } catch (EmptyResultDataAccessException ex) {
-            throw  new MpaNotFoundException("Рейтинг с id = " + id + " не найден.");
+            throw new MpaNotFoundException("Рейтинг с id = " + id + " не найден.");
         }
     }
 

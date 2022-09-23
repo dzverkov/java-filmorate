@@ -101,7 +101,7 @@ class FilmDbStorageTest {
         film1.setDescription("Film 11 Description");
         film1.setReleaseDate(LocalDate.of(2020, 3, 25));
         film1.setDuration(120);
-        Set<Genre> genres =  new HashSet<>();
+        Set<Genre> genres = new HashSet<>();
         genres.add(new Genre(1, "Комедия"));
         genres.add(new Genre(2, "Драма"));
         genres.add(new Genre(3, "Мультфильм"));
