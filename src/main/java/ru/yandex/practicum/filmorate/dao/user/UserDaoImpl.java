@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.user;
+package ru.yandex.practicum.filmorate.dao.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class UserDbStorage implements UserStorage {
+public class UserDaoImpl implements UserDao {
 
     private JdbcTemplate jdbcTemplate;
 
@@ -86,6 +87,27 @@ public class UserDbStorage implements UserStorage {
                 , user.getId()
         );
         return user;
+    }
+
+    @Override
+    public boolean deleteUser(User user) {
+        if (!contains(user.getId())) {
+            throw new UserNotFoundException("Фильм с id=" + user.getId() + " не найден.");
+        }
+
+        String deleteUserFriendsSql = "delete from FRIENDS where USER_ID = ?";
+        jdbcTemplate.update(deleteUserFriendsSql, user.getId());
+
+        String deleteUserLikesSql = "delete from FILM_LIKES where USER_ID = ?";
+        jdbcTemplate.update(deleteUserLikesSql, user.getId());
+
+        String deleteUserSql = "delete from USERS\n" +
+                "where USER_ID = ?";
+
+        int rowCnt = jdbcTemplate.update(deleteUserSql, user.getId());
+
+        return rowCnt > 0;
+
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.dao.film;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.*;
@@ -11,8 +11,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
+import ru.yandex.practicum.filmorate.dao.user.UserDaoImpl;
 
+import javax.validation.constraints.AssertTrue;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-class FilmDbStorageTest {
+class FilmDaoTest {
 
-    private final FilmDbStorage filmStorage;
-    private final UserDbStorage userStorage;
+    private final FilmDaoImpl filmStorage;
+    private final UserDaoImpl userStorage;
 
     private Film film1;
     private Film film2;
@@ -138,6 +139,7 @@ class FilmDbStorageTest {
     }
 
     @Test
+    @Order(7)
     void findTopPopularFilms() {
         for (int i = 2; i <= 10; i++) {
             userStorage.createUser(new User(i, "user" + i + "@mail.com", "user" + i, "User " + i
@@ -150,5 +152,13 @@ class FilmDbStorageTest {
         List<Film> films = filmStorage.findTopPopularFilms(5);
         assertEquals(film1.getId(), films.get(0).getId());
         assertEquals(film2.getId(), films.get(1).getId());
+    }
+
+    @Test
+    @Order(8)
+    void deleteFilm(){
+        boolean delRes = filmStorage.deleteFilm(film1);
+        assertTrue(delRes);
+        assertNull(filmStorage.findFilmById(film1.getId()));
     }
 }

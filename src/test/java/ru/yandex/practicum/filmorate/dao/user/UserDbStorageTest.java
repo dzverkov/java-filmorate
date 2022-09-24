@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.user;
+package ru.yandex.practicum.filmorate.dao.user;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.*;
@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-class UserDbStorageTest {
+class UserDaoTest {
 
-    private final UserDbStorage userStorage;
+    private final UserDaoImpl userStorage;
 
     static List<User> users = new ArrayList<>();
 
@@ -139,5 +139,13 @@ class UserDbStorageTest {
 
         List<User> friends = userStorage.findUsersFriendsCommon(users.get(0).getId(), users.get(1).getId());
         assertEquals(2, friends.size());
+    }
+
+    @Test
+    @Order(9)
+    void deleteFilm(){
+        boolean delRes = userStorage.deleteUser(users.get(0));
+        assertTrue(delRes);
+        assertNull(userStorage.findUserById(users.get(0).getId()));
     }
 }

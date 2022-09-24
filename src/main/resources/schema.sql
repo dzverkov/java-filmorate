@@ -98,10 +98,3 @@ CREATE TABLE IF NOT EXISTS PUBLIC.FRIENDS
 CREATE INDEX IF NOT EXISTS FRIENDS_USER_ID_IDX ON PUBLIC.FRIENDS (USER_ID);
 CREATE INDEX IF NOT EXISTS FRIENDS_FRIEND_ID_IDX ON PUBLIC.FRIENDS (FRIEND_ID);
 
--------------------------------------------------------------------------------------------------------------
-insert into PUBLIC.GENRES(NAME)
-values ('Комедия'),('Драма'),('Мультфильм'),('Триллер'),('Документальный'),('Боевик');
-
-insert into PUBLIC.MPA(NAME)
-values ('G'), ('PG'), ('PG-13'), ('R'), ('NC-17');
-

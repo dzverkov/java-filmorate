@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.dao.film;
 
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
-public class FilmDbStorage implements FilmStorage {
+public class FilmDaoImpl implements FilmDao {
 
     private JdbcTemplate jdbcTemplate;
 
@@ -142,6 +142,26 @@ public class FilmDbStorage implements FilmStorage {
 
         insertFilmGenres(film);
         return findFilmById(film.getId());
+    }
+
+    @Override
+    public boolean deleteFilm(Film film) {
+        if (!contains(film.getId())) {
+            throw new FilmNotFoundException("Фильм с id=" + film.getId() + " не найден.");
+        }
+
+        String deleteFilmGenresSql = "delete from FILM_GENRES where FILM_ID = ?";
+        jdbcTemplate.update(deleteFilmGenresSql, film.getId());
+
+        String deleteFilmLikesSql = "delete from FILM_LIKES where FILM_ID = ?";
+        jdbcTemplate.update(deleteFilmLikesSql, film.getId());
+
+        String deleteFilmSql = "delete from FILMS\n" +
+                "where FILM_ID = ?";
+
+        int rowCnt = jdbcTemplate.update(deleteFilmSql, film.getId());
+
+        return rowCnt > 0;
     }
 
     @Override
