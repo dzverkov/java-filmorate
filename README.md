@@ -20,9 +20,9 @@
         , DESCRIPTION
         , RELEASE_DATE
         , DURATION
-        , R.NAME AS RATING
+        , R.NAME AS MPA
        FROM FILMS F
-       LEFT JOIN RAITINGS R ON F.RAITING_ID = R.RAITING_ID;
+       LEFT JOIN MPA R ON F.MPA_ID = R.MPA_ID;
 
 2. Список пользователей.  
 
@@ -60,7 +60,7 @@
               USER_ID
             , FRIEND_ID
             FROM FRIENDS F
-            WHERE IS_CONFIRMED IS NOT NULL
+            WHERE IS_CONFIRMED <> 0
           )
         SELECT
           USER_ID
@@ -72,5 +72,5 @@
        JOIN USER_FRIENDS UF1 ON U.USER_ID = UF1.FRIEND_ID
        JOIN USER_FRIENDS UF2 ON UF1.FRIEND_ID = UF2.FRIEND_ID 
          AND UF1.FRIEND_ID <> UF2.USER_ID AND UF2.FRIEND_ID <> UF1.USER_ID
-       WHERE UF1.USER_ID = :1
-         AND  UF2.USER_ID = :2
+       WHERE UF1.USER_ID = :USER_ID1
+         AND  UF2.USER_ID = :USER_ID2

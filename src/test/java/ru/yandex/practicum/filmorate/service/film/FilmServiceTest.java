@@ -20,12 +20,12 @@ class FilmServiceTest {
         film.setDuration(120);
 
         assertThrows(ValidationException.class,
-                () -> FilmService.validateReleaseDate(film));
+                () -> FilmServiceImpl.validateReleaseDate(film));
 
         film.setReleaseDate(LocalDate.of(1895, 12, 28));
-        assertDoesNotThrow(() -> FilmService.validateReleaseDate(film));
+        assertDoesNotThrow(() -> FilmServiceImpl.validateReleaseDate(film));
 
         film.setReleaseDate(LocalDate.of(2020, 12, 28));
-        assertDoesNotThrow(() -> FilmService.validateReleaseDate(film));
+        assertDoesNotThrow(() -> FilmServiceImpl.validateReleaseDate(film));
     }
 }

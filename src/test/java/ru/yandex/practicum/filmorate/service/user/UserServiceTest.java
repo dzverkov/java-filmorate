@@ -1,12 +1,11 @@
 package ru.yandex.practicum.filmorate.service.user;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserServiceTest {
 
@@ -17,7 +16,7 @@ class UserServiceTest {
         user.setLogin("dolore");
         user.setBirthday(LocalDate.of(2000, 03, 15));
 
-        user = UserService.validateName(user);
+        user = UserServiceImpl.validateName(user);
         assertEquals(user.getLogin(), user.getName());
     }
 }
